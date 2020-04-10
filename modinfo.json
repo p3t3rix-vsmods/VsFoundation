@@ -3,7 +3,7 @@
   "modid": "foundation",
   "name": "Foundation",
   "author": "Unknown",
-  "description": ">>ADD YOUR DESCRIPTION HERE<<",
+  "description": "Library mod for my mods",
   "version": "1.0.0",
   "dependency": {
     "game": "1.12.14"
