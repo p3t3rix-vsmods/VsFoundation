@@ -2,10 +2,18 @@
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Label="UserMacros">
-    <BinaryDir>$(SolutionDir)/bin/$(AssemblyName)/</BinaryDir>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-  
+  <PropertyGroup Label="UserMacros">
+    <BinaryDir Condition="'$(Configuration)'=='Debug'">$(SolutionDir)/bin/$(AssemblyName)</BinaryDir>
+    <ExcludeFiles Condition="'$(Configuration)'=='Debug'">**/VintagestoryAPI.*;**/VSCreativeMod.*;**/VSEssentials.*;**/VSSurvivalMod.*</ExcludeFiles>
+    <BinaryDir Condition="'$(Configuration)'=='Release'">$(SolutionDir)/release/$(AssemblyName)</BinaryDir>
+    <ExcludeFiles Condition="'$(Configuration)'=='Release'">**/VintagestoryAPI.*;**/VSCreativeMod.*;**/VSEssentials.*;**/VSSurvivalMod.*;**/*.pdb</ExcludeFiles>
+  </PropertyGroup>
+
+
   <ItemGroup>
     <Reference Include="VintagestoryAPI">
       <HintPath>$(VINTAGE_STORY)/VintagestoryAPI.dll</HintPath>
@@ -25,28 +33,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="assets\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="assets\**">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Update="modinfo.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <AssetFiles Include="$(OutDir)/assets/**" />
+    <OutFiles Include="$(OutDir)/**" Exclude="$(ExcludeFiles)" />
   </ItemGroup>
 
-  <Target Name="CopyToBin" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Debug'">
-    <Copy SourceFiles="@(AssetFiles)" DestinationFiles="@(AssetFiles->'$(BinaryDir)/assets/%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BinaryDir)" />
-    <Copy SourceFiles="$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(BinaryDir)" />
-    <Copy SourceFiles="$(TargetDir)/modinfo.json" DestinationFolder="$(BinaryDir)" />
-  </Target>
-  
-  <Target Name="CleanBin" AfterTargets="Clean" Condition="'$(Configuration)' == 'Debug'">
-    <RemoveDir Directories="$(SolutionDir)/bin/$(ProjectName);" />
+  <Target Name="CopyToBin" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(OutFiles)" DestinationFiles="@(OutFiles->'$(BinaryDir)-$(Version)/%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
+  <Target Name="CleanBin" AfterTargets="Clean">
+    <RemoveDir Directories="$(BinaryDir)-$(Version);" />
+  </Target>
 </Project>
