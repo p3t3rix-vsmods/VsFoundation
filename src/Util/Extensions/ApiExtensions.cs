@@ -34,7 +34,7 @@ namespace Foundation.Util.Extensions
         /// </summary>
         public static TData LoadOrCreateDataFile<TData>(this ICoreAPI api, string filename) where TData : new()
         {
-            var path = Path.Combine(GamePaths.DataPathMods,"Data",GetWorldId(api), filename);
+            var path = Path.Combine(GamePaths.DataPath,"ModData",GetWorldId(api), filename);
             try
             {
                 if (File.Exists(path))
@@ -57,7 +57,7 @@ namespace Foundation.Util.Extensions
         /// </summary>
         public static void SaveDataFile<TData>(this ICoreAPI api, string filename, TData data) where TData : new()
         {
-            var path = Path.Combine(GamePaths.DataPathMods,"Data",GetWorldId(api), filename);
+            var path = Path.Combine(GamePaths.DataPath, "ModData", GetWorldId(api), filename);
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
