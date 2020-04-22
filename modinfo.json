@@ -4,8 +4,8 @@
   "name": "Foundation",
   "author": "Unknown",
   "description": "Library mod for my mods",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dependency": {
-    "game": "1.12.14"
+    "game": ""
   }
 }
