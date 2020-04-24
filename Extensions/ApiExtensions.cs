@@ -3,7 +3,7 @@ using System.IO;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
-namespace Foundation.Util.Extensions
+namespace Foundation.Extensions
 {
     public static class ApiExtensions
     {

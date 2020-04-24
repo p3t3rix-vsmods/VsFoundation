@@ -1,6 +1,6 @@
 ﻿using Vintagestory.API.Common;
 
-namespace Foundation.Util.Extensions
+namespace Foundation.Extensions
 {
     public static class LoggerExtensions
     {
