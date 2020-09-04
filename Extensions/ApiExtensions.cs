@@ -27,7 +27,7 @@ namespace Foundation.Extensions
             return newConfig;
         }
 
-        public static string GetWorldId(this ICoreAPI api) => api?.World?.Seed.ToString();
+        public static string GetWorldId(this ICoreAPI api) => api?.World?.SavegameIdentifier ?? api?.World?.Seed.ToString();
 
         /// <summary>
         /// These data files are per world 
