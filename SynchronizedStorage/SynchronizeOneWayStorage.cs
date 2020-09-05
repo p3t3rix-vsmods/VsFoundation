@@ -49,7 +49,7 @@ namespace Foundation.SynchronizedStorage
             api.Event.PlayerJoin += player => SendDataToClients();
 
             _serverChannel = api.Network.RegisterChannel(Name)
-                .RegisterMessageType<SynchronizedStorageMessage>();
+                .RegisterMessageType<SynchronizedStorageMessage<T>>();
         }
         protected virtual void OnSaveGameSaving(ICoreServerAPI api)
         {
@@ -66,7 +66,7 @@ namespace Foundation.SynchronizedStorage
         {
             if (Api is ICoreServerAPI)
             {
-                _serverChannel?.BroadcastPacket(new SynchronizedStorageMessage() {Name = Name, Storage = SerializerUtil.Serialize(Storage)});
+                _serverChannel?.BroadcastPacket(new SynchronizedStorageMessage<T>() {Name = Name, Storage = Storage});
             }
         }
         #endregion
@@ -76,15 +76,15 @@ namespace Foundation.SynchronizedStorage
         public virtual void StartClientSide(ICoreClientAPI api)
         {
             _clientChannel = api.Network.RegisterChannel(Name)
-                .RegisterMessageType<SynchronizedStorageMessage>()
-                .SetMessageHandler<SynchronizedStorageMessage>(OnClientDataReceived);
+                .RegisterMessageType<SynchronizedStorageMessage<T>>()
+                .SetMessageHandler<SynchronizedStorageMessage<T>>(OnClientDataReceived);
         }
 
-        protected virtual void OnClientDataReceived(SynchronizedStorageMessage msg)
+        protected virtual void OnClientDataReceived(SynchronizedStorageMessage<T> msg)
         {
             if (msg.Name == Name)
             {
-                Storage = SerializerUtil.Deserialize<T>(msg.Storage);
+                Storage =msg.Storage;
             }
         }
         #endregion
