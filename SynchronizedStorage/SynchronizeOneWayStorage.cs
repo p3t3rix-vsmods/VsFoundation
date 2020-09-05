@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Progression.EnabledSystem;
-using Vintagestory.API.Client;
+﻿using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -20,6 +14,7 @@ namespace Foundation.SynchronizedStorage
         public string Name { get; }
         public ICoreAPI Api { get; }
         private IServerNetworkChannel _serverChannel;
+        private IClientNetworkChannel _clientChannel;
         private T _storage;
 
         public T Storage
@@ -54,8 +49,7 @@ namespace Foundation.SynchronizedStorage
             api.Event.PlayerJoin += player => SendDataToClients();
 
             _serverChannel = api.Network.RegisterChannel(Name)
-                .RegisterMessageType<SynchronizedStorageMessage<T>>()
-                .RegisterMessageType<SynchronizedStorageMessage<T>>();
+                .RegisterMessageType<SynchronizedStorageMessage>();
         }
         protected virtual void OnSaveGameSaving(ICoreServerAPI api)
         {
@@ -70,7 +64,10 @@ namespace Foundation.SynchronizedStorage
 
         protected virtual void SendDataToClients()
         {
-            _serverChannel?.BroadcastPacket(new SynchronizedStorageMessage<T>() { Name = Name, Storage = Storage });
+            if (Api is ICoreServerAPI)
+            {
+                _serverChannel?.BroadcastPacket(new SynchronizedStorageMessage() {Name = Name, Storage = SerializerUtil.Serialize(Storage)});
+            }
         }
         #endregion
 
@@ -78,16 +75,16 @@ namespace Foundation.SynchronizedStorage
 
         public virtual void StartClientSide(ICoreClientAPI api)
         {
-            api.Network.RegisterChannel(Name)
-                .RegisterMessageType<SynchronizedStorageMessage<T>>()
-                .SetMessageHandler<SynchronizedStorageMessage<T>>(OnClientDataReceived);
+            _clientChannel = api.Network.RegisterChannel(Name)
+                .RegisterMessageType<SynchronizedStorageMessage>()
+                .SetMessageHandler<SynchronizedStorageMessage>(OnClientDataReceived);
         }
 
-        protected virtual void OnClientDataReceived(SynchronizedStorageMessage<T> msg)
+        protected virtual void OnClientDataReceived(SynchronizedStorageMessage msg)
         {
             if (msg.Name == Name)
             {
-                Storage = msg.Storage;
+                Storage = SerializerUtil.Deserialize<T>(msg.Storage);
             }
         }
         #endregion

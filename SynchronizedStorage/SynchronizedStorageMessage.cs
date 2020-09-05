@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProtoBuf;
+﻿using ProtoBuf;
 
 namespace Foundation.SynchronizedStorage
 {
-    [ProtoContract(ImplicitFields = ImplicitFields.AllPublic)]
-    public class SynchronizedStorageMessage<T>
+    [ProtoContract(ImplicitFields = ImplicitFields.None)]
+    public class SynchronizedStorageMessage
     {
-        public String Name { get; set; }
-        public T Storage { get; set; }
+        [ProtoMember(1, IsRequired = true)] 
+        public string Name { get; set; }
+
+
+        [ProtoMember(2, IsRequired = true)] 
+        public byte[] Storage { get; set; }
     }
 }
