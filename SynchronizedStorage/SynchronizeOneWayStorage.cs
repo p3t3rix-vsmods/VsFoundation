@@ -9,7 +9,7 @@ namespace Foundation.SynchronizedStorage
     /// A helper class to reduce the boilerplate code of synchronizing data from server to client (one way)
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class SynchronizeOneWayStorage<T> where T: class, new()
+    public class SynchronizeOneWayStorage<T> where T : class, new()
     {
         public string Name { get; }
         public ICoreAPI Api { get; }
@@ -66,7 +66,7 @@ namespace Foundation.SynchronizedStorage
         {
             if (Api is ICoreServerAPI)
             {
-                _serverChannel?.BroadcastPacket(new SynchronizedStorageMessage<T>() {Name = Name, Storage = Storage});
+                _serverChannel?.BroadcastPacket(new SynchronizedStorageMessage<T>() { Name = Name, Storage = Storage });
             }
         }
         #endregion
@@ -84,7 +84,7 @@ namespace Foundation.SynchronizedStorage
         {
             if (msg.Name == Name)
             {
-                Storage =msg.Storage;
+                Storage = msg.Storage;
             }
         }
         #endregion

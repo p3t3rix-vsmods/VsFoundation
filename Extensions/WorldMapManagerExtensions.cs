@@ -32,7 +32,8 @@ namespace Foundation.Extensions
 
             foreach (Waypoint marker in mapLayer.Waypoints)
             {
-                if (player.PlayerUID != marker.OwningPlayerUid && !memberOfGroups.ContainsKey(marker.OwningPlayerGroupId)) continue;
+                if (player.PlayerUID != marker.OwningPlayerUid && !memberOfGroups.ContainsKey(marker.OwningPlayerGroupId))
+                    continue;
                 hisMarkers.Add(marker);
             }
             mapManager.SendMapDataToClient(mapLayer, player, SerializerUtil.Serialize(hisMarkers));
